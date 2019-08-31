@@ -4,7 +4,8 @@ from flask import request
 from flask import jsonify
 import re
 from calculator.controller import CalculatorController
-#from cabbage.controller import
+from cabbage.controller import CabbageController
+from members.controller import MemberController
 
 app = Flask(__name__)
 
@@ -51,13 +52,30 @@ def ai_calc():
     #print('app.py에 출력된 덧셈 결과: {}'.format(result))
     return render_template('ai_calc.html', **render_params) # ai_calc로 render_params를 던졌다고 보면 됨
 
-@app.route('/cabbage')
+@app.route('/cabbage', methods = ['POST'])
 def cabbage():
-    # avg_temp min_temp     max_temp    rain_fall
     avg_temp = request.form['avg_temp']
     min_temp = request.form['min_temp']
     max_temp = request.form['max_temp']
     rain_fall = request.form['rain_fall']
+
+    cabg_ctrl = CabbageController(avg_temp, min_temp, max_temp, rain_fall)
+    result = cabg_ctrl.service()
+
+    render_params = {}
+    render_params['result'] = result
+    return render_template('cabbage.html', **render_params)
+
+@app.route('/login', methods = ['POST'])
+def login():
+    # form - input 테그 안에 name
+    userid = request.form['userid']
+    password = request.form['password']
+
+    log_ctrl = MemberController()
+    #log_ctrl.create_table()
+    view = log_ctrl.login(userid, password)
+    return render_template(view)
 
 @app.route('/')
 def index():
