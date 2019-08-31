@@ -4,6 +4,7 @@ from flask import request
 from flask import jsonify
 import re
 from calculator.controller import CalculatorController
+#from cabbage.controller import
 
 app = Flask(__name__)
 
@@ -49,6 +50,14 @@ def ai_calc():
     render_params['result'] = int(result)
     #print('app.py에 출력된 덧셈 결과: {}'.format(result))
     return render_template('ai_calc.html', **render_params) # ai_calc로 render_params를 던졌다고 보면 됨
+
+@app.route('/cabbage')
+def cabbage():
+    # avg_temp min_temp     max_temp    rain_fall
+    avg_temp = request.form['avg_temp']
+    min_temp = request.form['min_temp']
+    max_temp = request.form['max_temp']
+    rain_fall = request.form['rain_fall']
 
 @app.route('/')
 def index():
